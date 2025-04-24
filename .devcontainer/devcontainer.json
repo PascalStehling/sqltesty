@@ -1,0 +1,58 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/python
+{
+	"name": "Python 3",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/python:1-3.12-bullseye",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/common-utils:2": {},
+		"ghcr.io/devcontainers/features/node": {}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "bash scripts/install.sh",
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"editor.tabSize": 4,
+				"python.languageServer": "Pylance",
+				"python.analysis.typeCheckingMode": "basic",
+				"[python]": {
+					"diffEditor.ignoreTrimWhitespace": false,
+					"editor.wordBasedSuggestions": "off",
+					"editor.formatOnSaveMode": "file",
+					"editor.formatOnSave": true,
+					"python.formatting.provider": "none",
+					"notebook.formatOnSave.enabled": true,
+					"editor.defaultFormatter": "charliermarsh.ruff"
+				},
+				"python.analysis.autoImportCompletions": true,
+				"editor.rulers": [
+					100
+				],
+				"ruff.nativeServer": "on",
+				"github.copilot.chat.codesearch.enabled": true
+			},
+			"extensions": [
+				"PascalReitermann93.vscode-yaml-sort",
+				"github.vscode-github-actions",
+				"janisdd.vscode-edit-csv",
+				"mhutchie.git-graph",
+				"charliermarsh.ruff",
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"redhat.vscode-xml",
+				"redhat.vscode-yaml",
+				"streetsidesoftware.code-spell-checker",
+				"tamasfe.even-better-toml",
+				"vivaxy.vscode-conventional-commits",
+				"vscode-icons-team.vscode-icons"
+			]
+		}
+	}
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

@@ -1,0 +1,14 @@
+month,category_name,region,customer_segment,revenue,order_count,customer_count,avg_revenue_per_customer,category_rank_in_region
+2023-01,Home Appliances,East,Standard,2199.98,2,2,1099.99,1
+2023-01,Electronics,South,Premium,1299.99,1,1,1299.99,1
+2023-01,Home Appliances,South,Standard,1099.99,1,1,1099.99,2
+2023-01,Home Appliances,West,Premium,1099.99,1,1,1099.99,1
+2023-01,Home Appliances,West,Standard,1099.99,1,1,1099.99,1
+2023-02,Electronics,East,Standard,1599.98,2,2,799.99,1
+2023-02,Electronics,West,Standard,1599.98,1,1,1599.98,1
+2023-02,Home Appliances,South,Premium,1099.99,1,1,1099.99,1
+2023-03,Electronics,East,Standard,2599.98,2,2,1299.99,1
+2023-03,Electronics,Central,Premium,1299.99,1,1,1299.99,1
+2023-03,Electronics,South,Standard,1299.99,1,1,1299.99,1
+2023-03,Electronics,West,Premium,1299.99,1,1,1299.99,1
+2023-03,Electronics,West,Standard,1299.99,1,1,1299.99,1

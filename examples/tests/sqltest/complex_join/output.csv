@@ -1,0 +1,15 @@
+customer_name,customer_segment,product_name,category_name,order_date,quantity,price,total_amount,store_name,region
+Jennifer Thomas,Premium,Laptop Pro,Electronics,2023-03-22,1,1299.99,1299.99,Westside Mall,West
+Robert Johnson,Premium,Laptop Pro,Electronics,2023-03-10,1,1299.99,1299.99,Northpark Center,Central
+Elizabeth Wilson,Premium,Laptop Pro,Electronics,2023-01-15,1,1299.99,1299.99,Southbay Galleria,South
+Elizabeth Wilson,Premium,Refrigerator,Home Appliances,2023-02-05,1,1099.99,1099.99,Southbay Galleria,South
+David Brown,Premium,Refrigerator,Home Appliances,2023-01-25,1,1099.99,1099.99,Westside Mall,West
+Sarah Miller,Premium,Smart TV 55",Electronics,2023-04-12,1,799.99,799.99,Northpark Center,Central
+John Smith,Premium,Smart TV 55",Electronics,2023-02-15,1,799.99,799.99,Downtown Store,East
+David Brown,Premium,Smart TV 55",Electronics,2023-01-30,1,799.99,799.99,Westside Mall,West
+Jennifer Thomas,Premium,Washing Machine,Home Appliances,2023-03-15,1,749.99,749.99,Westside Mall,West
+John Smith,Premium,Washing Machine,Home Appliances,2023-01-10,1,749.99,749.99,Downtown Store,East
+John Smith,Premium,Digital Camera,Electronics,2023-04-20,1,599.99,599.99,Downtown Store,East
+David Brown,Premium,Wireless Headphones,Electronics,2023-02-18,2,249.99,499.98,Westside Mall,West
+Sarah Miller,Premium,Coffee Maker,Home Appliances,2023-04-05,2,129.99,259.98,Northpark Center,Central
+Elizabeth Wilson,Premium,Wireless Headphones,Electronics,2023-02-28,1,249.99,249.99,Southbay Galleria,South

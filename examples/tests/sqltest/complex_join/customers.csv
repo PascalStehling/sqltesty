@@ -1,0 +1,11 @@
+customer_id,customer_name,customer_segment,preferred_store_id
+1,John Smith,Premium,101
+2,Jane Doe,Standard,102
+3,Robert Johnson,Premium,103
+4,Mary Williams,Standard,101
+5,David Brown,Premium,102
+6,Sarah Miller,Premium,103
+7,Michael Davis,Standard,104
+8,Elizabeth Wilson,Premium,104
+9,James Anderson,Standard,101
+10,Jennifer Thomas,Premium,102
