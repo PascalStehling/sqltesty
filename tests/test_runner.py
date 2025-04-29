@@ -1,6 +1,6 @@
 """Tests for the sqltest package."""
 
-from sqltest.runner import run_sql_test, run_sql_tests
+from sqltesty.runner import run_sql_test, run_sql_tests
 
 
 def test_run_sql_test_success(tmp_path):

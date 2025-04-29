@@ -34,3 +34,34 @@ includes = []
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
+
+
+## Tool for automatically increasing the version number. This is done via Github Actions
+[tool.semantic_release]
+version_variables = [
+    "sqltesty/__init__.py:__version__",
+]
+version_toml = [
+  "pyproject.toml:project.version"
+]
+
+branch = "main"
+upload_to_pypi = true
+upload_to_release = true
+
+[tool.semantic_release.commit_parser_options]
+allowed_tags = [
+    "build",
+    "chore",
+    "ci",
+    "docs",
+    "feat",
+    "fix",
+    "perf",
+    "style",
+    "refactor",
+    "test",
+    "revert",
+]
+minor_tags = ["feat"]
+patch_tags = ["fix", "perf", "revert"]

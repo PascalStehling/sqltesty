@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
-from sqltest.output_formatter import (
+from sqltesty.output_formatter import (
     format_success_message,
     format_error_message,
     format_column_mismatch,
