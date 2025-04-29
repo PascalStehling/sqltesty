@@ -1,5 +1,5 @@
 [project]
-name = "sqltest"
+name = "sqltesty"
 version = "0.1.0"
 description = "Test SQL files using DuckDB and CSV fixtures"
 readme = "README.md"
@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.scripts]
-sqltest = "sqltest.cli:main"
+sqltesty = "sqltesty.cli:main"
 
 [dependency-groups]
 dev = [
