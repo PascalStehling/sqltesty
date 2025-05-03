@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.1.4 (2025-05-03)
+
+### Bug Fixes
+
+- :green_heart: another try of fixing pypi publishing
+  ([`e2b6b3c`](https://github.com/PascalStehling/sqltesty/commit/e2b6b3ca9a18c7a752cad724c596ed52dedd77e8))
+
+github actions debugging is the worst :(
+
+
 ## v0.1.3 (2025-05-03)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 [project]
 name = "sqltesty"
-version = "0.1.3"
+version = "0.1.4"
 description = "Test SQL files using DuckDB and CSV fixtures"
 readme = "README.md"
 license = {text = "MIT"}
