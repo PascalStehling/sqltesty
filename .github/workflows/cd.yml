@@ -91,10 +91,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           git_committer_name: "Pascal Stehling"
           git_committer_email: "pascal@stehl.ing"
-          
-      - name: Publish package
-        if: steps.release.outputs.released == 'true'
-        uses: pypa/gh-action-pypi-publish@release/v1
             
       - name: Publish | Upload to GitHub Release Assets
         uses: python-semantic-release/publish-action@v9.21.0
