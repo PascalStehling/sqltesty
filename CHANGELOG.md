@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.3 (2025-05-03)
+
+### Bug Fixes
+
+- :green_heart: fix pypi upload
+  ([`151a341`](https://github.com/PascalStehling/sqltesty/commit/151a341fa1bc22fe6bf5acfbffd2669a51a2c92f))
+
+
 ## v0.1.2 (2025-05-03)
 
 ### Bug Fixes
