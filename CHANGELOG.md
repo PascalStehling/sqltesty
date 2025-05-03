@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.2 (2025-05-03)
+
+### Bug Fixes
+
+- :bug: some more ci stuff
+  ([`8209ee9`](https://github.com/PascalStehling/sqltesty/commit/8209ee974de37b366124dc340a1e96682d9609cf))
+
+
 ## v0.1.1 (2025-04-29)
 
 ### Bug Fixes
