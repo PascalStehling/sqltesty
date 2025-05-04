@@ -1,6 +1,31 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-05-04)
+
+### Features
+
+- :sparkles: add new dtype difference output
+  ([`c72a521`](https://github.com/PascalStehling/sqltesty/commit/c72a521ddf9d0192b1e32543fd22f111b2ce284b))
+
+- :sparkles: improve sorted row handling
+  ([`5be4269`](https://github.com/PascalStehling/sqltesty/commit/5be426937ba6308f49eec32289c2dbad3385b314))
+
+The problem was that with order by you get an ordering, but without the order can be random. So now
+  depending if the row is sorted or not it will be compared as it is or it will be sorted by the
+  test, to make sure the values are allways in the same order
+
+### Refactoring
+
+- :recycle: move functions for better structure
+  ([`19afe27`](https://github.com/PascalStehling/sqltesty/commit/19afe271bbbf9c6c0d23263c4effe18f8b139e1d))
+
+- :rotating_light: add and fix linter stuff
+  ([`f8c9f38`](https://github.com/PascalStehling/sqltesty/commit/f8c9f38853c925d1d0be17c248523e9e6b964352))
+
+improve the linter and check everything
+
+
 ## v0.1.4 (2025-05-03)
 
 ### Bug Fixes
