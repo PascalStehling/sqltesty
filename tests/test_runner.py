@@ -1,4 +1,4 @@
-"""Tests for the sqltest package."""
+"""Tests for the  package."""
 
 from sqltesty.runner import run_sql_test, run_sql_tests
 
@@ -7,7 +7,7 @@ def test_run_sql_test_success(tmp_path):
     """Test successful SQL test execution."""
     # Create test directory structure
     sql_file = tmp_path / "query.sql"
-    test_dir = tmp_path / "tests" / "sqltest"
+    test_dir = tmp_path / "tests" / "sqltesty"
     fixture_dir = test_dir / "query"
     fixture_dir.mkdir(parents=True)
 
@@ -31,7 +31,7 @@ def test_run_sql_test_failure(tmp_path):
     """Test SQL test with incorrect expected output."""
     # Create test directory structure
     sql_file = tmp_path / "query.sql"
-    test_dir = tmp_path / "tests" / "sqltest"
+    test_dir = tmp_path / "tests" / ""
     fixture_dir = test_dir / "query"
     fixture_dir.mkdir(parents=True)
 
@@ -55,7 +55,7 @@ def test_run_sql_test_failure(tmp_path):
 def test_run_sql_tests(tmp_path):
     """Test running multiple SQL tests."""
     # Create test directory structure
-    test_dir = tmp_path / "tests" / "sqltest"
+    test_dir = tmp_path / "tests" / ""
     test_dir.mkdir(parents=True)
 
     # Create two SQL files

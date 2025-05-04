@@ -120,7 +120,7 @@ def run_sql_tests(test_dir: Path, verbose: bool = False) -> bool:
         True if all tests passed, False otherwise
     """
     # Find all SQL files in the repo (parent directory of test_dir)
-    repo_dir = test_dir.parent.parent if test_dir.name == "sqltest" else test_dir.parent
+    repo_dir = test_dir.parent.parent if test_dir.name == "sqltesty" else test_dir.parent
     sql_files = list(repo_dir.glob("**/*.sql"))
 
     if not sql_files:

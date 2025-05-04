@@ -1,4 +1,4 @@
-# SQLTest
+# sqltesty
 
 A command-line tool to test SQL queries using DuckDB and CSV fixtures.
 
@@ -7,22 +7,22 @@ A command-line tool to test SQL queries using DuckDB and CSV fixtures.
 ## Installation
 
 ```bash
-pip install .
+pip install sqltesty
 ```
 
 ## Usage
 
-The `sqltest` command looks for SQL files in your project and tests them against fixture data.
+The `sqltesty` command looks for SQL files in your project and tests them against fixture data.
 
 ```bash
 # Run all SQL tests with default settings
-sqltest
+sqltesty
 
 # Specify a custom test directory
-sqltest --test-dir=custom/tests/path
+sqltesty --test-dir=custom/tests/path
 
 # Run with verbose output
-sqltest --verbose
+sqltesty --verbose
 ```
 
 The verbose output now includes enhanced error highlighting with color coding:
@@ -41,7 +41,7 @@ This makes it easier to identify and fix issues in your SQL queries, especially 
 ## Test Structure
 
 - Place your SQL files anywhere in your repository
-- Create a test directory (default: `tests/sqltest`)
+- Create a test directory (default: `tests/sqltesty`)
 - For each SQL file, create a subdirectory with the same name (without extension)
 - Within each subdirectory, place:
   - `output.csv`: The expected output of your SQL query
@@ -55,7 +55,7 @@ This makes it easier to identify and fix issues in your SQL queries, especially 
     query1.sql
     query2.sql
   /tests
-    /sqltest
+    /sqltesty
       /query1
         customers.csv     # Table data
         products.csv      # Table data
@@ -69,10 +69,10 @@ This makes it easier to identify and fix issues in your SQL queries, especially 
 
 ```bash
 # Install development dependencies
-pip install -e ".[dev]"
+uv sync --all-groups
 
 # Run tests
-pytest
+uv run pytest
 ```
 
 If you want to run the examples, just do
@@ -80,5 +80,5 @@ If you want to run the examples, just do
 ```
 cd examples
 
-sqltest
+sqltesty
 ```

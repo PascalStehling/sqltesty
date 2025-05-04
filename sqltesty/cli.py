@@ -1,4 +1,4 @@
-"""Command-line interface for sqltest."""
+"""Command-line interface for sqltesty."""
 
 import sys
 from pathlib import Path
@@ -11,7 +11,7 @@ from .runner import run_sql_tests
 @click.command()
 @click.option(
     "--test-dir",
-    default="tests/sqltest",
+    default="tests/sqltesty",
     help="Directory containing SQL test files and fixtures",
 )
 @click.option("--verbose", is_flag=True, help="Print detailed test information")
