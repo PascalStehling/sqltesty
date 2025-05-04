@@ -68,6 +68,8 @@ def create_formatted_row(
 
         if col_status == "diff":
             expected_data.append(f"[on red]{value}[/]")
+        elif col_status == "dtype":
+            expected_data.append(f"[on blue]{value}[/]")
         elif col_status == "extra":  # Column exists in Expected, not Actual
             expected_data.append(f"[on yellow]{value}[/]")
         elif col_status == "missing":  # Column exists in Actual, not Expected
@@ -112,12 +114,20 @@ def format_row_based_diff(expected_df: pd.DataFrame, actual_df: pd.DataFrame) ->
         common_cols = expected_cols & actual_cols
         for col in common_cols:
             diff_info[col] = "match"
+
             if (
                 expected_row is not None
                 and actual_row is not None
                 and expected_row[col] != actual_row[col]
             ):
                 diff_info[col] = "diff"
+                has_row_diff = True
+            elif (
+                expected_row is not None
+                and actual_row is not None
+                and type(expected_row[col]) is not type(actual_row[col])
+            ):
+                diff_info[col] = "dtype"
                 has_row_diff = True
 
         # Mark columns only in expected as 'extra'
