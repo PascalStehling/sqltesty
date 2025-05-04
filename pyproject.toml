@@ -65,3 +65,42 @@ allowed_tags = [
 ]
 minor_tags = ["feat"]
 patch_tags = ["fix", "perf", "revert"]
+
+
+[tool.ruff]
+line-length = 100
+exclude = [".venv", "*.ipynb"]
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "I",
+    "N",
+    "UP",
+    "PT",
+    "Q",
+    "RET",
+    "SIM",
+    "ARG",
+    "ERA",
+    "PD",
+    "PL",
+    "TRY",
+    "NPY",
+    "PERF",
+    "FURB",
+    "RUF",
+]
+ignore = ["TRY003"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+include = [
+    "sqltesty",
+    "tests",
+]
+exclude = ["**/__pycache__", "**/.venv/"]
+reportPrivateImportUsage = false
+reportMissingTypeArgument = false

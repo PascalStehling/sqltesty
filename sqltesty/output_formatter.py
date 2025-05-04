@@ -1,7 +1,5 @@
 """Output formatting utilities for SQL test results."""
 
-from typing import Set
-
 import pandas as pd
 from rich.console import Console
 from rich.table import Table
@@ -24,7 +22,7 @@ def format_error_message(test_name: str, error_type: str, error_details: str) ->
     console.print(f"  {error_details}")
 
 
-def format_column_mismatch(expected_cols: Set[str], actual_cols: Set[str]) -> None:
+def format_column_mismatch(expected_cols: set[str], actual_cols: set[str]) -> None:
     """Format and display column mismatches between expected and actual DataFrames."""
     missing_cols = sorted(expected_cols - actual_cols)
     extra_cols = sorted(actual_cols - expected_cols)
@@ -54,17 +52,12 @@ def format_row_count_mismatch(expected_count: int, actual_count: int) -> None:
         console.print(f"  [yellow]Extra {actual_count - expected_count} rows[/yellow]")
 
 
-def create_formatted_row(
-    all_cols: list[str], diff_info: dict[str, str], row: pd.Series
-):
+def create_formatted_row(all_cols: list[str], diff_info: dict[str, str], row: pd.Series | None):
     expected_data = []
     for col in all_cols:
         col_status = diff_info.get(col)
         # Safely access value only if row and column exist
-        if row is not None and col in row.index:
-            value = str(row[col])
-        else:
-            value = EMPTY_FIELD  # Default if column doesn't exist in this row
+        value = str(row[col]) if row is not None and col in row.index else EMPTY_FIELD
 
         if col_status == "diff":
             expected_data.append(f"[on red]{value}[/]")
@@ -80,7 +73,7 @@ def create_formatted_row(
     return expected_data
 
 
-def format_row_based_diff(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> None:
+def format_row_based_diff(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> None:  # noqa: PLR0912
     """Format and display differences between DataFrames based on row indices.
 
     Compares rows with matching indices. If differences are found, prints the
@@ -152,7 +145,8 @@ def format_row_based_diff(expected_df: pd.DataFrame, actual_df: pd.DataFrame) ->
             expected_data = [
                 f"[bold cyan]{idx}[/]",
                 "[green]Expected[/]",
-            ] + create_formatted_row(all_cols, diff_info, expected_row)  # type: ignore
+                *create_formatted_row(all_cols, diff_info, expected_row),
+            ]  # type: ignore
             table.add_row(*expected_data)
         else:
             # Indicate Expected row is missing entirely for this index
@@ -165,11 +159,15 @@ def format_row_based_diff(expected_df: pd.DataFrame, actual_df: pd.DataFrame) ->
 
         # --- Actual Row ---
         if actual_row_exists:
-            actual_data = ["", "[red]Actual[/]"] + create_formatted_row(
-                all_cols,
-                diff_info,
-                actual_row,  # type: ignore
-            )
+            actual_data = [
+                "",
+                "[red]Actual[/]",
+                *create_formatted_row(
+                    all_cols,
+                    diff_info,
+                    actual_row,
+                ),
+            ]
             table.add_row(*actual_data, end_section=True)
         else:
             # Indicate Actual row is missing entirely for this index

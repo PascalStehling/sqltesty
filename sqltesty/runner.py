@@ -6,13 +6,41 @@ import click
 import pandas as pd
 
 from sqltesty.helpers import extract_order_by_columns, load_csv_files, run_query_duckdb
-
 from sqltesty.output_formatter import (
-    format_success_message,
-    format_error_message,
     format_dataframe_diff,
+    format_error_message,
+    format_success_message,
     format_test_summary,
 )
+
+
+def check_dataframes(
+    actual_result: pd.DataFrame, expected_result: pd.DataFrame, order_by_columns: list[str]
+) -> str | None:
+    # First check that we have the same columns
+    if set(actual_result.columns) != set(expected_result.columns):
+        return f"Column mismatch: {set(actual_result.columns)} != {set(expected_result.columns)}"
+
+    # Then check that we have the same number of rows
+    if len(actual_result) != len(expected_result):
+        return f"Row count mismatch: {len(actual_result)} != {len(expected_result)}"
+
+    for col in actual_result.columns:
+        if actual_result[col].dtype != expected_result[col].dtype:
+            return f"DType mismatch: Column '{col}' has different dtypes"
+
+        if col in order_by_columns:
+            if not actual_result[col].equals(expected_result[col]):
+                return f"Value mismatch: Values in column '{col}' don't match"
+        elif (
+            not actual_result[col]
+            .sort_values()  # type: ignore
+            .reset_index(drop=True)
+            .equals(expected_result[col].sort_values().reset_index(drop=True))  # type: ignore
+        ):
+            return f"Value mismatch: Values in column '{col}' don't match after sorting"
+
+    return None
 
 
 def run_sql_test(sql_file: Path, test_dir: Path, verbose: bool = False) -> bool:
@@ -63,52 +91,22 @@ def run_sql_test(sql_file: Path, test_dir: Path, verbose: bool = False) -> bool:
     order_by_columns = extract_order_by_columns(sql_query)
 
     # Compare results with more flexible comparison
-    try:
-        # First check that we have the same columns
-        if set(actual_result.columns) != set(expected_result.columns):
-            raise AssertionError(
-                f"Column mismatch: {set(actual_result.columns)} != {set(expected_result.columns)}"
-            )
 
-        # Then check that we have the same number of rows
-        if len(actual_result) != len(expected_result):
-            raise AssertionError(
-                f"Row count mismatch: {len(actual_result)} != {len(expected_result)}"
-            )
-
-        for col in actual_result.columns:
-            if actual_result[col].dtype != expected_result[col].dtype:
-                raise AssertionError(f"Column '{col}' has different dtypes")
-
-            if col in order_by_columns:
-                if not actual_result[col].equals(expected_result[col]):
-                    raise AssertionError(f"Values in column '{col}' don't match")
-            else:
-                if (
-                    not actual_result[col]
-                    .sort_values()
-                    .reset_index(drop=True)
-                    .equals(expected_result[col].sort_values().reset_index(drop=True))
-                ):
-                    raise AssertionError(
-                        f"Values in column '{col}' don't match after sorting"
-                    )
-
+    check_result = check_dataframes(actual_result, expected_result, order_by_columns)
+    if check_result is None:
         if verbose:
             format_success_message(test_name)
         return True
-    except AssertionError as e:
-        error_message = str(e)
-        error_type = (
-            error_message.split(":")[0] if ":" in error_message else "Assertion Error"
-        )
 
-        if not verbose:
-            click.echo(f"✗ Test failed: {test_name}", err=True)
-        else:
-            format_error_message(test_name, error_type, error_message)
-            format_dataframe_diff(expected_result, actual_result)
-        return False
+    error_type = check_result.split(":")[0] if ":" in check_result else "Assertion Error"
+
+    if not verbose:
+        click.echo(f"✗ Test failed: {test_name}", err=True)
+    else:
+        format_error_message(test_name, error_type, check_result)
+        format_dataframe_diff(expected_result, actual_result)
+
+    return False
 
 
 def run_sql_tests(test_dir: Path, verbose: bool = False) -> bool:
@@ -130,9 +128,7 @@ def run_sql_tests(test_dir: Path, verbose: bool = False) -> bool:
         return False
 
     # Run tests for each SQL file
-    results = []
-    for sql_file in sql_files:
-        results.append(run_sql_test(sql_file, test_dir, verbose))
+    results = [run_sql_test(sql_file, test_dir, verbose) for sql_file in sql_files]
 
     # Print summary
     total = len(results)

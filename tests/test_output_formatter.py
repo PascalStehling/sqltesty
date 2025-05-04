@@ -7,12 +7,12 @@ import pandas as pd
 import pytest
 
 from sqltesty.output_formatter import (
-    format_success_message,
-    format_error_message,
     format_column_mismatch,
-    format_row_count_mismatch,
-    format_row_based_diff,
     format_dataframe_diff,
+    format_error_message,
+    format_row_based_diff,
+    format_row_count_mismatch,
+    format_success_message,
     format_test_summary,
 )
 

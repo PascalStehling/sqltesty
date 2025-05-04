@@ -1,10 +1,9 @@
-from pathlib import Path
 import re
+from pathlib import Path
 
 import click
 import duckdb
 import pandas as pd
-
 
 TableMapping = dict[str, pd.DataFrame]
 
@@ -29,13 +28,13 @@ def extract_order_by_columns(sql_query: str) -> list[str]:
     # Map original column names to renamed names
     column_alias_map = {}
     for part in select_clause.split(","):
-        part = part.strip()
+        strip_part = part.strip()
         if " as " in part.lower():
-            original, alias = re.split(r"(?i)\s+as\s+", part)
+            original, alias = re.split(r"(?i)\s+as\s+", strip_part)
             column_alias_map[original.strip()] = alias.strip()
         else:
             # Handle table-prefixed columns (e.g., table1.column)
-            column_name = part.split(".")[-1].strip()
+            column_name = strip_part.split(".")[-1].strip()
             column_alias_map[column_name] = column_name
 
     # Extract ORDER BY clause
@@ -48,13 +47,13 @@ def extract_order_by_columns(sql_query: str) -> list[str]:
     # Split by commas and clean up ASC/DESC and whitespace
     columns = []
     for col in order_by_clause.split(","):
-        col = re.sub(r"\s+(asc|desc)$", "", col.strip(), flags=re.IGNORECASE)
+        sub_col = re.sub(r"\s+(asc|desc)$", "", col.strip(), flags=re.IGNORECASE)
         # Remove table prefix if present
-        col_name = col.split(".")[-1]
+        col_name = sub_col.split(".")[-1]
 
-        cleaned_name = column_alias_map.get(col_name, None)
+        cleaned_name = column_alias_map.get(col_name)
         if cleaned_name is None:
-            cleaned_name = column_alias_map.get(col, col_name)
+            cleaned_name = column_alias_map.get(sub_col, col_name)
 
         # Use alias if available
         columns.append(cleaned_name)
@@ -73,7 +72,7 @@ def load_csv_files(
             click.echo(f"  Loading table: {table_name}")
         tables[table_name] = pd.read_csv(table_file)
 
-    with open(sql_file, "r") as f:
+    with open(sql_file) as f:
         sql_query = f.read()
 
     return tables, sql_query
@@ -85,5 +84,4 @@ def run_query_duckdb(tables: TableMapping, sql_query: str) -> pd.DataFrame:
     for table_name, result in tables.items():
         conn.register(table_name, result)
 
-    result = conn.execute(sql_query).fetchdf()
-    return result
+    return conn.execute(sql_query).fetchdf()

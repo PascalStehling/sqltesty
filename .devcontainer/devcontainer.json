@@ -19,7 +19,7 @@
 			"settings": {
 				"editor.tabSize": 4,
 				"python.languageServer": "Pylance",
-				"python.analysis.typeCheckingMode": "basic",
+				"python.analysis.typeCheckingMode": "standard",
 				"[python]": {
 					"diffEditor.ignoreTrimWhitespace": false,
 					"editor.wordBasedSuggestions": "off",
