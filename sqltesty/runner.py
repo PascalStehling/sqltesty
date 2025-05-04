@@ -6,39 +6,14 @@ import click
 import duckdb
 import pandas as pd
 
+from sqltesty.helpers import extract_order_by_columns
+
 from .output_formatter import (
     format_success_message,
     format_error_message,
     format_dataframe_diff,
     format_test_summary,
 )
-
-
-def normalize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """Normalize a DataFrame for consistent comparison.
-
-    This function:
-    1. Resets the index
-    2. Converts numeric columns to float for consistent comparison
-    3. Sorts rows by all columns for consistent ordering
-    """
-    # Create a copy to avoid modifying the original
-    result = df.copy()
-
-    # Convert numeric columns to float
-    for col in result.select_dtypes(include=["number"]).columns:
-        result[col] = result[col].astype(float)
-
-    # Try to sort by all columns to ensure consistent order
-    try:
-        result = result.sort_values(by=list(result.columns))
-    except Exception:
-        # If sorting fails (e.g., due to mixed types), just continue
-        pass
-
-    # Reset index AFTER sorting
-    return result.reset_index(drop=True)
-
 
 TableMapping = dict[str, pd.DataFrame]
 
@@ -69,19 +44,6 @@ def run_query_duckdb(
         conn.register(table_name, result)
 
     result = conn.execute(sql_query).fetchdf()
-    if "order by" in sql_query.lower():
-        try:
-            result = result.sort_values(by=list(result.columns))
-            if verbose:
-                click.echo(
-                    "No ORDER BY in SQL: Data ordered by columns from left to right"
-                )
-        except Exception:
-            if verbose:
-                click.echo("No ORDER BY in SQL: Ordering FAILED!!!")
-            # If sorting fails (e.g., due to mixed types), just continue
-            pass
-
     return result
 
 
@@ -130,35 +92,39 @@ def run_sql_test(sql_file: Path, test_dir: Path, verbose: bool = False) -> bool:
     # Load expected output
     expected_result = pd.read_csv(output_file)
 
-    # Normalize both DataFrames for more consistent comparison
-    actual_norm = normalize_dataframe(actual_result)
-    expected_norm = normalize_dataframe(expected_result)
+    order_by_columns = extract_order_by_columns(sql_query)
 
     # Compare results with more flexible comparison
     try:
         # First check that we have the same columns
-        if set(actual_norm.columns) != set(expected_norm.columns):
+        if set(actual_result.columns) != set(expected_result.columns):
             raise AssertionError(
-                f"Column mismatch: {set(actual_norm.columns)} != {set(expected_norm.columns)}"
+                f"Column mismatch: {set(actual_result.columns)} != {set(expected_result.columns)}"
             )
 
         # Then check that we have the same number of rows
-        if len(actual_norm) != len(expected_norm):
+        if len(actual_result) != len(expected_result):
             raise AssertionError(
-                f"Row count mismatch: {len(actual_norm)} != {len(expected_norm)}"
+                f"Row count mismatch: {len(actual_result)} != {len(expected_result)}"
             )
 
-        # For each column, check that the sorted values match
-        for col in actual_norm.columns:
-            if (
-                not actual_norm[col]
-                .sort_values()  # type: ignore
-                .reset_index(drop=True)
-                .equals(expected_norm[col].sort_values().reset_index(drop=True))  # type: ignore
-            ):
-                raise AssertionError(
-                    f"Values in column '{col}' don't match after sorting"
-                )
+        for col in actual_result.columns:
+            if actual_result[col].dtype != expected_result[col].dtype:
+                raise AssertionError(f"Column '{col}' has different dtypes")
+
+            if col in order_by_columns:
+                if not actual_result[col].equals(expected_result[col]):
+                    raise AssertionError(f"Values in column '{col}' don't match")
+            else:
+                if (
+                    not actual_result[col]
+                    .sort_values()
+                    .reset_index(drop=True)
+                    .equals(expected_result[col].sort_values().reset_index(drop=True))
+                ):
+                    raise AssertionError(
+                        f"Values in column '{col}' don't match after sorting"
+                    )
 
         if verbose:
             format_success_message(test_name)
