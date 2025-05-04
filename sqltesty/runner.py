@@ -3,48 +3,16 @@
 from pathlib import Path
 
 import click
-import duckdb
 import pandas as pd
 
-from sqltesty.helpers import extract_order_by_columns
+from sqltesty.helpers import extract_order_by_columns, load_csv_files, run_query_duckdb
 
-from .output_formatter import (
+from sqltesty.output_formatter import (
     format_success_message,
     format_error_message,
     format_dataframe_diff,
     format_test_summary,
 )
-
-TableMapping = dict[str, pd.DataFrame]
-
-
-def load_csv_files(
-    table_files: list[Path], sql_file: Path, verbose: bool
-) -> tuple[TableMapping, str]:
-    tables: TableMapping = {}
-
-    for table_file in table_files:
-        table_name = table_file.stem
-        if verbose:
-            click.echo(f"  Loading table: {table_name}")
-        tables[table_name] = pd.read_csv(table_file)
-
-    with open(sql_file, "r") as f:
-        sql_query = f.read()
-
-    return tables, sql_query
-
-
-def run_query_duckdb(
-    tables: TableMapping, sql_query: str, verbose: bool
-) -> pd.DataFrame:
-    conn = duckdb.connect(":memory:")
-
-    for table_name, result in tables.items():
-        conn.register(table_name, result)
-
-    result = conn.execute(sql_query).fetchdf()
-    return result
 
 
 def run_sql_test(sql_file: Path, test_dir: Path, verbose: bool = False) -> bool:
@@ -84,7 +52,7 @@ def run_sql_test(sql_file: Path, test_dir: Path, verbose: bool = False) -> bool:
     tables, sql_query = load_csv_files(table_files, sql_file, verbose)
 
     try:
-        actual_result = run_query_duckdb(tables, sql_query, verbose)
+        actual_result = run_query_duckdb(tables, sql_query)
     except Exception as e:
         click.echo(f"Error executing SQL for {test_name}: {e}", err=True)
         return False

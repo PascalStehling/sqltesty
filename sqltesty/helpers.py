@@ -1,4 +1,12 @@
+from pathlib import Path
 import re
+
+import click
+import duckdb
+import pandas as pd
+
+
+TableMapping = dict[str, pd.DataFrame]
 
 
 def extract_order_by_columns(sql_query: str) -> list[str]:
@@ -52,3 +60,30 @@ def extract_order_by_columns(sql_query: str) -> list[str]:
         columns.append(cleaned_name)
 
     return columns
+
+
+def load_csv_files(
+    table_files: list[Path], sql_file: Path, verbose: bool
+) -> tuple[TableMapping, str]:
+    tables: TableMapping = {}
+
+    for table_file in table_files:
+        table_name = table_file.stem
+        if verbose:
+            click.echo(f"  Loading table: {table_name}")
+        tables[table_name] = pd.read_csv(table_file)
+
+    with open(sql_file, "r") as f:
+        sql_query = f.read()
+
+    return tables, sql_query
+
+
+def run_query_duckdb(tables: TableMapping, sql_query: str) -> pd.DataFrame:
+    conn = duckdb.connect(":memory:")
+
+    for table_name, result in tables.items():
+        conn.register(table_name, result)
+
+    result = conn.execute(sql_query).fetchdf()
+    return result
